@@ -1,52 +1,45 @@
-
-# ==========================================================
-# PROYECTO: SOFTWARE FJ
-# ARCHIVO: cliente.py
-# DESCRIPCIÓN: Clase encargada de gestionar los clientes.
-
-# Importamos re para realizar validaciones de texto
 import re
 
-# Creamos una clase Cliente
-class Cliente:
+# Importamos la clase abstracta Entidad
+from .entidad import Entidad
 
-    # Constructor: se ejecuta cuando creamos un nuevo cliente
-    def __init__(self, nombre, documento, correo):
+# La clase Cliente hereda de Entidad
+class Cliente(Entidad):
 
-        # Atributos privados (encapsulación)
-        # El guion bajo indica que estos datos son internos
+    # Constructor de la clase Cliente
+    def __init__(self, identificador, nombre, documento, correo):
+
+        # Llamamos al constructor de la clase padre
+        super().__init__(identificador)
+
+        # Inicializamos los atributos privados
         self._nombre = self._validar_nombre(nombre)
         self._documento = self._validar_documento(documento)
         self._correo = self._validar_correo(correo)
 
-   
-    # MÉTODO PARA VALIDAR EL NOMBRE
-    # Comprueba que el nombre no esté vacío
-   
+    # VALIDAR NOMBRE DEL CLIENTE
+    
     def _validar_nombre(self, nombre):
 
         if not isinstance(nombre, str) or not nombre.strip():
             raise ValueError("El nombre no puede estar vacío")
 
         return nombre.strip()
-
-    # MÉTODO PARA VALIDAR EL DOCUMENTO
-    # Comprueba que el documento contenga solamente números
-    
+    # VALIDAR DOCUMENTO
+   
     def _validar_documento(self, documento):
 
         documento = str(documento).strip()
 
         if not documento.isdigit():
-            raise ValueError("El documento debe contener solo números")
+            raise ValueError("El documento debe contener números")
 
         if len(documento) < 5:
             raise ValueError("El documento debe tener mínimo 5 dígitos")
 
         return documento
 
-    # MÉTODO PARA VALIDAR EL CORREO
-    # Comprueba que tenga un formato básico de correo
+    # VALIDAR CORREO ELECTRÓNICO
     
     def _validar_correo(self, correo):
 
@@ -56,13 +49,12 @@ class Cliente:
         patron = r"^[\w.+-]+@[\w-]+\.[\w.-]+$"
 
         if not re.match(patron, correo.strip()):
-            raise ValueError("El correo electrónico no es válido")
+            raise ValueError("El correo no es válido")
 
         return correo.strip()
 
-    # PROPIEDADES (GETTERS)
-    # Permiten consultar los atributos privados
-
+    # PROPIEDADES PARA CONSULTAR LOS ATRIBUTOS PRIVADOS
+   
     @property
     def nombre(self):
         return self._nombre
@@ -75,18 +67,18 @@ class Cliente:
     def correo(self):
         return self._correo
 
-   
-    # MÉTODO PARA MOSTRAR LA INFORMACIÓN DEL CLIENTE
-    # Devuelve los datos registrados
+    # IMPLEMENTACIÓN DEL MÉTODO ABSTRACTO DE ENTIDAD
    
     def mostrar_informacion(self):
 
         return (
+            f"Identificador: {self._identificador}\n"
             f"Nombre: {self._nombre}\n"
             f"Documento: {self._documento}\n"
             f"Correo: {self._correo}"
         )
 
-    # Método especial para representar el objeto como texto
+    # Representación del objeto como texto
     def __str__(self):
+
         return f"Cliente: {self._nombre} - Documento: {self._documento}"
